@@ -4,6 +4,7 @@ const { default: mongoose } = require('mongoose');
 const app = express();
 require('dotenv').config();
 const session = require('express-session');
+const methodOverride = require('method-override');
 
 
 // DATABASE CONFIGURATION
@@ -23,11 +24,10 @@ db.on('disconnected', () => console.log('mongo disconnected'));
 // Middleware
 // Body parser middleware: give us access to req.body
 app.use(express.urlencoded({ extended: true }));
+app.use(methodOverride('_method'));
+
 
 // Routes / Controllers
-app.get('/', (req, res) => {
-  res.render('index.ejs');
-});
 
 const userController = require('./controllers/users.js');
 app.use('/users', userController);
@@ -41,6 +41,23 @@ const sessionsController = require('./controllers/sessions');
 app.use('/sessions', sessionsController);
 
 
+app.get('/', (req, res) => {
+  res.render('index.ejs', {
+    currentUser: req.session.currentUser
+  });
+});
+
+app.get('/', (req, res) => {
+  if (req.session.currentUser) {
+    res.render('dashboard.ejs', {
+      currentUser: req.session.currentUser
+    });
+  } else {
+    res.render('index.ejs', {
+      currentUser: req.session.currentUser
+    });
+  }
+});
 
 //Listener
 const PORT = process.env.PORT;
