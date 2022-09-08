@@ -8,6 +8,7 @@ const User = require('../models/user.js');
 // New (registration page)
 
 
+
 // Create (registration route)
 userRouter.post('/', (req, res) => {
   //overwrite the user password with the hashed password, then pass that in to our database

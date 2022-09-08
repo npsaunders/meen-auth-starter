@@ -25,7 +25,11 @@ db.on('disconnected', () => console.log('mongo disconnected'));
 app.use(express.urlencoded({ extended: true }));
 
 // Routes / Controllers
-const userController = require('./controllers/users');
+app.get('/', (req, res) => {
+  res.render('index.ejs');
+});
+
+const userController = require('./controllers/users.js');
 app.use('/users', userController);
 app.use(
   session({
@@ -33,7 +37,9 @@ app.use(
     resave: false,
     saveUninitialized: false
   }));
-// app.use('/sessions', sessionsController);
+const sessionsController = require('./controllers/sessions');
+app.use('/sessions', sessionsController);
+
 
 
 //Listener
